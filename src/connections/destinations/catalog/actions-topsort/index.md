@@ -1,7 +1,6 @@
 ---
 title: Topsort Events Destination
 id: 66ba237845b93b71bca2713e
-beta: true
 ---
 
 [Topsort](https://www.topsort.com){:target="_blank"} is an AI-powered retail media platform enabling retailers and marketplaces to build their own high-performing ad networks, rivaling Google and Amazon. With its advanced auto-bidding algorithm and fast integration, Topsort provides an advertising solution that delivers exceptional returns on ad spend (ROAS) while respecting users privacy by being cookie-less.
@@ -24,7 +23,19 @@ This destination helps you track the 3 main events Topsort needs to serve the mo
 
 This destination has 3 default presets that map the Track events `'Product Viewed'`, `'Product Clicked'` and `'Order Completed'` to Topsort's `impression`, `click` and `purchase` events, respectively. If you’re not familiar with the Segment Spec, take a look to understand what the [Track method](/docs/connections/spec/track/) does. 
 
-The mappings in the Topsort destination are built based on the Segment [Ecommerce Spec](/docs/connections/spec/ecommerce/v2/). If you have different Segment Track events mapped to these action definitions, then Topsport can adapt this destination to your case. Once the destination is configured, activate only the mappings relevant to your site. See point 5 of the [set up](#set-up-your-topsort-destination) for more details.
+The mappings in the Topsort destination are built based on the Segment [Ecommerce Spec](/docs/connections/spec/ecommerce/v2/). If you have different Segment Track events mapped to these action definitions, then Topsort can adapt this destination to your case. Once the destination is configured, activate only the mappings relevant to your site. See point 5 of the [set up](#set-up-your-topsort-destination) for more details.
+
+
+### Set up your Topsort destination
+
+1. From the Segment web app, click **Catalog**, then click **Destinations**.
+2. Search for "Topsort" in the Catalog, select it, and choose which of your sources to connect the destination to.
+3. In the [Topsort Manager Platform](https://app.topsort.com){:target="_blank"}, go to [Settings > API Integration](https://app.topsort.com/new/es/marketplace/account-settings/api-integration){:target="_blank"} to find or create your **Marketplace API Key** for auctions and events.
+4. Return to the Topsort destination in the Segment app and enter the value for your **Marketplace API Key**.
+5. Enable only the Track events relevant to your site and so that the events do not get duplicated with a single user action. For example, if you always trigger a `Product Clicked` event together with the `Product Added` event when a user makes a click in the "Add to cart" button, then you should enable only the `Product Clicked` event for the Topsort Destination.
+
+{% include components/actions-fields.html %}
+### Track
 
 You don't need to change anything about the way you report Track events to Segment. The only extra field you need to provide, only for the `impression` and `click` events, is the `resolvedBidId` given in the winner promoted product (whether it is from the [Auctions API](https://docs.topsort.com/reference/createauctions){:target="_blank"} or the [proxy](https://docs.topsort.com/reference/listings-low-code){:target="_blank"} response). Please find below an example call to track a product listing page (PLP) click event with the `resolvedBidId` included:
 
@@ -35,15 +46,6 @@ analytics.track("Product Clicked", {
   resolvedBidId: product.resolvedBidId
 });
 ```
-
-### Set up your Topsort destination
-
-1. From the Segment web app, click **Catalog**, then click **Destinations**.
-2. Search for "Topsort" in the Catalog, select it, and choose which of your sources to connect the destination to.
-3. In the [Topsort Manager Platform](https://app.topsort.com){:target="_blank"}, go to [Settings > API Integration](https://app.topsort.com/new/es/marketplace/account-settings/api-integration){:target="_blank"} to find or create your **Marketplace API Key** for auctions and events.
-4. Return to the Topsort destination in the Segment app and enter the value for your **Marketplace API Key**.
-5. Enable only the Track events relevant to your site and so that the events do not get duplicated with a single user action. For example, if you always trigger a `Product Clicked` event together with the `Product Added` event when a user makes a click in the "Add to cart" button, then you should enable only the `Product Clicked` event for the Topsort Destination.
-{% include components/actions-fields.html %}
 
 ### Identify
 
@@ -60,4 +62,4 @@ analytics.identify('361b1fdfbeaa9d64a13c033eb9f970dc6740f6bc', {
 Once a user is identified, each call to Segment's [Track method](/docs/connections/spec/track/) automatically records the user ID.
 Users that are not logged in can be tracked using an [anonymousID](/docs/connections/spec/identify/#anonymous-id).
 
-If you use a server side source please provide one of both options, anonymousId or userId.
+If you use a server-side source please provide one or more identifiers: `anonymousId` or `userId`.
